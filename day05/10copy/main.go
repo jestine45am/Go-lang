@@ -1,0 +1,104 @@
+package main
+
+/*
+// 使用切片作为缓存来保存读取数据
+import (
+	"fmt"
+	"io"
+	"os"
+)
+
+func fileCopydemo1(dest, src string) {
+	sc,err := os.Open(src)
+	if err != nil{
+		fmt.Println("The src file not exists", err)
+		return
+	}
+	defer sc.Close()
+	dst,err := os.OpenFile(dest, os.O_CREATE|os.O_APPEND|os.O_TRUNC, 0644)
+	if err != nil{
+		fmt.Println(err)
+		return
+	}
+	defer dst.Close()
+	var buf = make([]byte, 128)
+	for {
+		n,err := sc.Read(buf)
+		if err == io.EOF{
+			fmt.Println("file copy complete!")
+		}
+		if err != nil{
+			return
+		}
+		dst.Write(buf[:n])
+	}
+}
+
+func main(){
+	fileCopydemo1("./main.1", "./main.go")
+}
+*/
+
+/*
+// 使用 bufio 包内的 NewReader 和 NewWriter 函数实现
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"io"
+)
+func fileCopydemo2(dest string, src string){
+	sc, err := os.Open(src)
+	if err != nil{
+		fmt.Println(err)
+		return
+	}
+	defer sc.Close()
+
+	dst, err := os.OpenFile(dest, os.O_CREATE|os.O_APPEND|os.O_TRUNC, 0644)
+	if err != nil{
+		fmt.Println(err)
+		return
+	}
+	defer dst.Close()
+
+	reader := bufio.NewReader(sc)
+	writer := bufio.NewWriter(dst)
+	for{
+		tmp,err := reader.ReadString('\n')
+		if err == io.EOF{
+			fmt.Println("copy complete")
+			return
+		}
+		if err != nil{
+			fmt.Println(err)
+			return
+		}
+		writer.WriteString(tmp)
+		writer.Flush()
+	}
+}
+func main(){
+	fileCopydemo2("./main.2", "./main.go")
+
+}
+*/
+
+// 使用 ioutil 包内的 ReadFile 和 WriteFile 实现
+import (
+	"fmt"
+	"io/ioutil"
+)
+
+func fileCopydemo3(dest, src string){
+	buf, err := ioutil.ReadFile(src)
+	if err != nil{
+		fmt.Println(err)
+		return
+	}
+	ioutil.WriteFile(dest, buf, 0644)
+}
+
+func main(){
+	fileCopydemo3("./main.3", "./main.go")
+}
